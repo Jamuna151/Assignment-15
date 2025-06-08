@@ -1,0 +1,62 @@
+package java1;
+import java.util.*;
+public class RatMaze {
+    static List<String> paths = new ArrayList<>();
+    static int[][] directions = {{1, 0}, {0, -1}, {0, 1}, {-1, 0}};
+    static char[] dirChar = {'D', 'L', 'R', 'U'};
+
+    public static void solve(int[][] maze, int n, int row, int col, String path, boolean[][] visited) {
+        if (row == n - 1 && col == n - 1) {
+            paths.add(path);
+            return;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int newRow = row + directions[i][0];
+            int newCol = col + directions[i][1];
+
+            if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < n &&
+                maze[newRow][newCol] == 1 && !visited[newRow][newCol]) {
+                visited[newRow][newCol] = true;
+                solve(maze, n, newRow, newCol, path + dirChar[i], visited);
+                visited[newRow][newCol] = false;
+            }
+        }
+    }
+
+    public static List<String> findPath(int[][] maze, int n) {
+        paths.clear();  // Clear previous test runs
+        if (maze[0][0] == 0 || maze[n - 1][n - 1] == 0)
+            return paths;
+
+        boolean[][] visited = new boolean[n][n];
+        visited[0][0] = true;
+        solve(maze, n, 0, 0, "", visited);
+        return paths;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter maze size (n x n): ");
+        int n = sc.nextInt();
+
+        int[][] maze = new int[n][n];
+        System.out.println("Enter maze values (0 or 1):");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                maze[i][j] = sc.nextInt();
+            }
+        }
+
+        List<String> result = findPath(maze, n);
+        if (result.isEmpty()) {
+            System.out.println("No paths found!");
+        } else {
+            System.out.println("All possible paths:");
+            for (String path : result) {
+                System.out.println(path);
+            }
+        }
+    }
+}
+
