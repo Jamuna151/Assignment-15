@@ -1,0 +1,47 @@
+package java1;
+import java.util.*;
+public class PhoneCombinations {
+    private static final String[] KEYPAD = {
+        "",    // 0
+        "",    // 1
+        "abc", // 2
+        "def", // 3
+        "ghi", // 4
+        "jkl", // 5
+        "mno", // 6
+        "pqrs",// 7
+        "tuv", // 8
+        "wxyz" // 9
+    };
+    public static List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<>();
+        if (digits.isEmpty()) return result;
+
+        backtrack("", digits, 0, result);
+        return result;
+    }
+    private static void backtrack(String path, String digits, int index, List<String> result) {
+        if (index == digits.length()) {
+            result.add(path);
+            return;
+        }
+        String letters = KEYPAD[digits.charAt(index) - '0'];
+        for (char ch : letters.toCharArray()) {
+            backtrack(path + ch, digits, index + 1, result);
+        }
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter digits (2-9 only): ");
+        String digits = sc.nextLine().trim();
+        if (digits.isEmpty() || !digits.matches("[2-9]+")) {
+            System.out.println("Invalid input. Please enter digits between 2 and 9 only.");
+            return;
+        }
+        List<String> combinations = letterCombinations(digits);
+        System.out.println("Possible letter combinations:");
+        for (String combo : combinations) {
+            System.out.println(combo);
+        }
+    }
+}
